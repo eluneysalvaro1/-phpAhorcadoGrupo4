@@ -147,6 +147,7 @@ function existeLetra($coleccionLetras, $letra){
             //String $nuevaPalabra  $pistaNueva
             //Int $puntosNuevos
             //Boolean $palabraNueva 
+            $contadora = 0; 
             echo "Ingrese una nueva palabra: "; 
             $nuevaPalabra = trim(fgets(STDIN)); 
             $palabraNueva = existePalabra($coleccionPalabras,$nuevaPalabra);
@@ -159,11 +160,14 @@ function existeLetra($coleccionLetras, $letra){
                 $pistaNueva = trim(fgets(STDIN)); 
                 echo "Ingrese los puntos: "; 
                 $puntosNuevos = trim(fgets(STDIN));
-               
-                $coleccionPalabras[8]["palabra"] = $nuevaPalabra; 
-                $coleccionPalabras[8]["pista"] = $pistaNueva; 
-                $coleccionPalabras[8]["puntaje"] = $puntosNuevos;
-            return $coleccionPalabras; 
+                
+                $contadora = $contadora + count($coleccionPalabras);
+
+                $coleccionPalabras[$contadora]["palabra"] = $nuevaPalabra; 
+                $coleccionPalabras[$contadora]["pista"] = $pistaNueva; 
+                $coleccionPalabras[$contadora]["puntosPalabra"] = $puntosNuevos;
+                $contadora++;
+                return $coleccionPalabras; 
         }
 
 
@@ -327,7 +331,7 @@ function jugar($coleccionPalabras, $indicePalabra, $cantIntentos){
 	    echo "\n    O     |    ";
 	    echo "\n   /|\    |    ";
 	    echo "\n   / \    |    ";
-	    echo "\n M=====M  ---- ";
+	    echo "\n M=====M  ---- \n";
     }
     return $puntaje; //DEVUELVE EL PUNTAJE
 }
@@ -462,15 +466,15 @@ do{
     $opcion = seleccionarOpcion();
     switch ($opcion) {
     case 1: //Jugar con una palabra aleatoria
-            $indiceAleatorioEntre = indiceAleatorioEntre($num1,$num2);
+            $indiceAleatorioEntre = indiceAleatorioEntre($num1,$num2-1);
 			$indicePalabra = $indiceAleatorioEntre;
 			$puntos = jugar($coleccionPalabras,$indicePalabra,$cantDeIntentos);
 			$coleccionJuegos = agregarJuego($coleccionJuegos,$puntos,$indicePalabra);
-            $var2=count($coleccionJuegos);
+            $var2 = count($coleccionJuegos);
         break;
     case 2: //Jugar con una palabra elegida
-            $selec1=0;
-            $selec1=solicitarIndiceEntre($num1,$num2-1);
+            $selec1 = 0;
+            $selec1 = solicitarIndiceEntre($num1,$num2-1);
            
             $puntos = jugar($coleccionPalabras,$selec1,$cantDeIntentos);
             $coleccionJuegos=agregarJuego($coleccionJuegos,$puntos,$selec1);
