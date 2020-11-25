@@ -460,9 +460,6 @@ $coleccionPalabras = cargarPalabras();
 do{
     $num1 = 0;
 	$num2 = count($coleccionPalabras);
-	$var1 = 0;
-	$var2 = count($coleccionJuegos);
-	$contJ = count($coleccionJuegos);
     $opcion = seleccionarOpcion();
     switch ($opcion) {
     case 1: //Jugar con una palabra aleatoria
@@ -474,33 +471,28 @@ do{
         break;
     case 2: //Jugar con una palabra elegida
             $selec1 = 0;
-            $selec1 = solicitarIndiceEntre($num1,$num2-1);
-           
+            $selec1 = solicitarIndiceEntre($num1,$num2-1);  
             $puntos = jugar($coleccionPalabras,$selec1,$cantDeIntentos);
-            $coleccionJuegos=agregarJuego($coleccionJuegos,$puntos,$selec1);
-			$var2=count($coleccionJuegos);
+            $coleccionJuegos = agregarJuego($coleccionJuegos,$puntos,$selec1);
+			$var2 = count($coleccionJuegos);
         break;
     case 3: //Agregar una palabra al listado
         $coleccionPalabras = agregarNuevaPalabra($coleccionPalabras);
-        $num2 = $num2 +1;
+        $num2 = $num2 + 1;
         break;
     case 4: //Mostrar la información completa de un número de juego
-        $obteniendoIndice=0;
-			$obteniendoIndice=solicitarIndiceEntre($var1,$var2-1);
-			$mostrandoJuego= mostrarJuego($coleccionJuegos,$coleccionPalabras,$obteniendoIndice);
-
+            $obteniendoIndice = 0;
+			$obteniendoIndice = solicitarIndiceEntre($num1,$num2-1);
+			$mostrandoJuego = mostrarJuego($coleccionJuegos,$coleccionPalabras,$obteniendoIndice);
         break;
     case 5: //Mostrar la información completa del primer juego con más puntaje
         $mostrarElmasAltoPuntaje = juegoConMasPuntaje($coleccionJuegos,$coleccionPalabras);
-
         break;
     case 6: //Mostrar la información completa del primer juego que supere un puntaje indicado por el usuario
         $mostrarPrimerDato= puntajeIngresadoPorUsuario($coleccionJuegos,$coleccionPalabras);
-			
         break;
     case 7: //Mostrar la lista de palabras ordenada por orden alfabetico
         $mostrarOrdenados = mostrarOrdenado($coleccionPalabras);
-			
         break;
     }
 
