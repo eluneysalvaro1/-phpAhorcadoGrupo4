@@ -4,7 +4,6 @@
 * NOMBRE Y APELLIDOS - LEGAJOS
 ******************************************/
 //Eluney Salvaro - FAI-3143 
-//Felipe Flores - FAI-2466
 //Ezequiel Araya Nadal - 122578
 
 /**
