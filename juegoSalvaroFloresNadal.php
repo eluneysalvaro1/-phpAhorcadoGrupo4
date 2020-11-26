@@ -31,12 +31,12 @@ function cargarPalabras(){
 function cargarJuegos(){
     // Array $coleccionJuegos
 	$coleccionJuegos = array();
-	$coleccionJuegos[0] = array("puntos"=> 0, "indicePalabra" => 1);
-	$coleccionJuegos[1] = array("puntos"=> 10,"indicePalabra" => 2);
-    $coleccionJuegos[2] = array("puntos"=> 0, "indicePalabra" => 1);
+	$coleccionJuegos[0] = array("puntos"=> 1, "indicePalabra" => 1);
+	$coleccionJuegos[1] = array("puntos"=> 6,"indicePalabra" => 2);
+    $coleccionJuegos[2] = array("puntos"=> 1, "indicePalabra" => 1);
     $coleccionJuegos[3] = array("puntos"=> 8, "indicePalabra" => 0);
     $coleccionJuegos[4] = array("puntos"=> 5, "indicePalabra" => 4);
-    $coleccionJuegos[5] = array("puntos"=> 0, "indicePalabra" => 7);
+    $coleccionJuegos[5] = array("puntos"=> 1, "indicePalabra" => 7);
     $coleccionJuegos[6] = array("puntos"=> 8, "indicePalabra" => 7);
     $coleccionJuegos[7] = array("puntos"=> 5, "indicePalabra" => 6);
     
@@ -109,7 +109,7 @@ function existePalabra($coleccionPalabras,$palabra){
     $i=0;
     $cantPal = count($coleccionPalabras);
     $existe = false;
-    while($i<$cantPal && !$existe){
+    while($i < $cantPal && !$existe){
         $existe = $coleccionPalabras[$i]["palabra"] == $palabra;
         $i++;
     }
@@ -218,9 +218,7 @@ function palabraDescubierta($coleccionLetras){
     if ($sumador == count($coleccionLetras) ) {
         $retorno = true;
     }
-
         return $retorno; 
-
 }
 
 /**
@@ -240,7 +238,6 @@ function solicitarLetra(){
         }else{
             $letraCorrecta = true;
         }
-        
     }while(!$letraCorrecta);
     
     return $letra;
@@ -385,7 +382,7 @@ function mostrarJuego($coleccionJuegos,$coleccionPalabras,$indiceJuego){
  * 
  */
 function juegoConMasPuntaje($coleccionJuegos,$coleccionPalabras){
-    //Int $numeroAuxiliar $i $indideMayor 
+    //Int $numeroAuxiliar $i $indiceMayor 
     $numeroAuxiliar = 0;
     for ($i=0; $i < count($coleccionJuegos) ; $i++) { 
         if ($coleccionJuegos[$i]["puntos"] > $numeroAuxiliar ) { //COMPROBAMOS QUE SEA EL JUEGO CON MAYOR PUNTAJE GUARDADO 
@@ -411,18 +408,24 @@ function puntajeIngresadoPorUsuario($coleccionJuegos,$coleccionPalabras){
    echo "Ingrese puntaje a comparar: \n";
    $puntosUsuario = trim(fgets(STDIN));
    $cont = count($coleccionJuegos);
+   $aux = -1;
    $i = 0;
        do{
-           if($coleccionJuegos[$i]["puntos"] > $puntosUsuario){ //SI LOS PUNTOS DE ESA POSICION ES MAYOR AL INGRESADO POR EL USUARIO MUESTRA ESE JUEGO
-             $primerIndice = $i;
-             $primerPal = true;
+            if($coleccionJuegos[$i]["puntos"] > $puntosUsuario && $puntosUsuario >= 0){  //SI LOS PUNTOS DE ESA POSICION ES MAYOR AL INGRESADO POR EL USUARIO MUESTRA ESE JUEGO
+                $primerIndice = $i;
+                $primerPal = true;
+            }else{
+                $i = $i + 1;
+            } 
+        }
+        while(!$primerPal && $i<$cont);
+        if($i == $cont){
+            $aux = -1;
         }else{
-            $i = $i + 1;
-   }
-}
- while(!$primerPal && $i<$cont);
- mostrarJuego($coleccionJuegos,$coleccionPalabras,$primerIndice);
-};
+            $aux = mostrarJuego($coleccionJuegos,$coleccionPalabras,$primerIndice);
+        };
+        return $aux; 
+    };
 /*>>> Implementar las funciones necesarias para la opcion 7 del menú <<<*/
 /*
 * Mostrar la lista de palabras ordenada por orden alfabético
@@ -451,12 +454,16 @@ function cmp($a,$b){
 
 
 
-/*************************************************/
-/************** PROGRAMA PRINCIAL ****************/
-/*************************************************/
+/***************  ******************** ***************/
+/**************  PROGRAMA PRINCIPAL  ****************/
+/***************  *******************  *****************/
 $cantDeIntentos = 6; //Constante en php para cantidad de intentos que tendrá el jugador para adivinar la palabra.
 $coleccionJuegos = cargarJuegos();
 $coleccionPalabras = cargarPalabras();
+
+//Array $coleccionJuegos $coleccionPalabras 
+//Int $cantDeIntentos $num1 $num2 $indiceAleatorioEntre $puntos $indicePalabra $selec1 $opcion  $obteniendoIndice
+
 do{
     $num1 = 0;
 	$num2 = count($coleccionPalabras);
@@ -467,14 +474,12 @@ do{
 			$indicePalabra = $indiceAleatorioEntre;
 			$puntos = jugar($coleccionPalabras,$indicePalabra,$cantDeIntentos);
 			$coleccionJuegos = agregarJuego($coleccionJuegos,$puntos,$indicePalabra);
-            $var2 = count($coleccionJuegos);
         break;
     case 2: //Jugar con una palabra elegida
             $selec1 = 0;
             $selec1 = solicitarIndiceEntre($num1,$num2-1);  
             $puntos = jugar($coleccionPalabras,$selec1,$cantDeIntentos);
             $coleccionJuegos = agregarJuego($coleccionJuegos,$puntos,$selec1);
-			$var2 = count($coleccionJuegos);
         break;
     case 3: //Agregar una palabra al listado
         $coleccionPalabras = agregarNuevaPalabra($coleccionPalabras);
@@ -483,16 +488,17 @@ do{
     case 4: //Mostrar la información completa de un número de juego
             $obteniendoIndice = 0;
 			$obteniendoIndice = solicitarIndiceEntre($num1,$num2-1);
-			$mostrandoJuego = mostrarJuego($coleccionJuegos,$coleccionPalabras,$obteniendoIndice);
+			mostrarJuego($coleccionJuegos,$coleccionPalabras,$obteniendoIndice);
         break;
     case 5: //Mostrar la información completa del primer juego con más puntaje
-        $mostrarElmasAltoPuntaje = juegoConMasPuntaje($coleccionJuegos,$coleccionPalabras);
+        juegoConMasPuntaje($coleccionJuegos,$coleccionPalabras);
         break;
     case 6: //Mostrar la información completa del primer juego que supere un puntaje indicado por el usuario
-        $mostrarPrimerDato= puntajeIngresadoPorUsuario($coleccionJuegos,$coleccionPalabras);
+        $puntajeIngresado = puntajeIngresadoPorUsuario($coleccionJuegos,$coleccionPalabras);
+        echo " \n" . $puntajeIngresado . "\n";
         break;
     case 7: //Mostrar la lista de palabras ordenada por orden alfabetico
-        $mostrarOrdenados = mostrarOrdenado($coleccionPalabras);
+        mostrarOrdenado($coleccionPalabras);
         break;
     }
 
